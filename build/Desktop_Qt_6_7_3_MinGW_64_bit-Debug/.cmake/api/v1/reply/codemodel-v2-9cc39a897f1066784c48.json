@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-fe7629467f41cc838f07.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "EECE2560_Final_Project",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "EECE2560_Final_Project::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-EECE2560_Final_Project-Debug-768777047831a603dfe9.json",
+					"name" : "EECE2560_Final_Project",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "EECE2560_Final_Project_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-EECE2560_Final_Project_autogen-Debug-b216e90cf435fecd4d69.json",
+					"name" : "EECE2560_Final_Project_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "EECE2560_Final_Project_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-EECE2560_Final_Project_autogen_timestamp_deps-Debug-5496b1a37ec0cfca3b9a.json",
+					"name" : "EECE2560_Final_Project_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/Ryder/Projects/Classes/EECE2560_Final_Project/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug",
+		"source" : "C:/Users/Ryder/Projects/Classes/EECE2560_Final_Project"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

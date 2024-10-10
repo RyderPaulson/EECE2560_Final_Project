@@ -1,0 +1,9 @@
+C:/Users/Ryder/Projects/Classes/EECE2560_Final_Project/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/CMakeFiles/EECE2560_Final_Project.dir
+C:/Users/Ryder/Projects/Classes/EECE2560_Final_Project/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/CMakeFiles/edit_cache.dir
+C:/Users/Ryder/Projects/Classes/EECE2560_Final_Project/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/CMakeFiles/rebuild_cache.dir
+C:/Users/Ryder/Projects/Classes/EECE2560_Final_Project/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/CMakeFiles/list_install_components.dir
+C:/Users/Ryder/Projects/Classes/EECE2560_Final_Project/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/CMakeFiles/install.dir
+C:/Users/Ryder/Projects/Classes/EECE2560_Final_Project/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/CMakeFiles/install/local.dir
+C:/Users/Ryder/Projects/Classes/EECE2560_Final_Project/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/CMakeFiles/install/strip.dir
+C:/Users/Ryder/Projects/Classes/EECE2560_Final_Project/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/CMakeFiles/EECE2560_Final_Project_autogen_timestamp_deps.dir
+C:/Users/Ryder/Projects/Classes/EECE2560_Final_Project/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/CMakeFiles/EECE2560_Final_Project_autogen.dir
