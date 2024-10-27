@@ -7,6 +7,7 @@ Includes class implementations of:
 
 #include <string>
 #include <vector>
+#include <ctime>
 using namespace std;
 
 #ifndef EECE2560_FINAL_PROJECT_MARKET_H
@@ -16,13 +17,19 @@ class User;
 class Share;
 class Company;
 class Market;
+struct SharePrice;
+
+struct SharePrice{
+    time_t t;
+    double price;
+};
 
 class Market{
 private:
     vector<Company> companies;
 public:
     Market();
-    void print();
+    string print();
 };
 
 class User{
@@ -32,30 +39,33 @@ private:
     vector<Share> owned_shares;
 public:
     User();
-    void print();
+    string print();
 };
 
 class Company{
 private:
-    vector<Share> owned_shares;
     string ticker;
-    double share_price;
+    SharePrice curr_share_price;
+    vector<SharePrice> price_history;
 public:
     Company();
-    void print();
+    Company(string t, vector<SharePrice> ph);
+    string print();
+    string printHistory();
+    string getTicker();
+    SharePrice getPrice();
 };
 
 class Share{
 private:
-    Company comp;
+    Company company;
     string ticker;
-    string owner;
-    double buy_price, current_price;
+    SharePrice buy_price, current_price;
 
 public:
-    Share();
-    void print();
-    Company tick();
+    Share(Company C);
+    string print();
+    Company getCompany();
     void updatePrice();
 
 };

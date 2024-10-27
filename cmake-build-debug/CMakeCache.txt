@@ -251,6 +251,9 @@ EECE2560_Final_Project_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 EECE2560_Final_Project_SOURCE_DIR:STATIC=C:/Users/Ryder/Projects/Classes/EECE2560_Final_Project
 
+//The directory containing a CMake configuration file for PythonLibs.
+PythonLibs_DIR:PATH=PythonLibs_DIR-NOTFOUND
+
 
 ########################
 # INTERNAL cache entries
