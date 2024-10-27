@@ -45,7 +45,7 @@ string Company::printHistory() {
     ostringstream oss;
     oss << "Price History for " << ticker << endl;
     for(int i = 0; i < price_history.size(); i++) {
-        oss << "Time: " << price_history[i].t << " | Price: " << price_history[i].price << endl;
+        oss << "Time: " << price_history[i].t << " | Price: " << fixed << setprecision(2) << price_history[i].price << endl;
     }
     return oss.str();
 }
@@ -70,7 +70,7 @@ Share::Share(Company c) {
 string Share::print() {
     ostringstream oss;
 
-    oss << this->company.print() << " | " << fixed << setprecision(2) << to_string(this->current_price.price);
+    oss << this->company.print() << " | " << fixed << setprecision(2) << this->current_price.price;
     return oss.str();
 }
 
