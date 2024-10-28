@@ -61,6 +61,12 @@ build CMakeFiles/EECE2560_Final_Project.dir/Market.cpp.obj: CXX_COMPILER__EECE25
   OBJECT_DIR = CMakeFiles\EECE2560_Final_Project.dir
   OBJECT_FILE_DIR = CMakeFiles\EECE2560_Final_Project.dir
 
+build CMakeFiles/EECE2560_Final_Project.dir/Algorithm.cpp.obj: CXX_COMPILER__EECE2560_Final_Project_unscanned_Debug C$:/Users/Ryder/Projects/Classes/EECE2560_Final_Project/Algorithm.cpp || cmake_object_order_depends_target_EECE2560_Final_Project
+  DEP_FILE = CMakeFiles\EECE2560_Final_Project.dir\Algorithm.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\EECE2560_Final_Project.dir
+  OBJECT_FILE_DIR = CMakeFiles\EECE2560_Final_Project.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target EECE2560_Final_Project
@@ -69,7 +75,7 @@ build CMakeFiles/EECE2560_Final_Project.dir/Market.cpp.obj: CXX_COMPILER__EECE25
 #############################################
 # Link the executable EECE2560_Final_Project.exe
 
-build EECE2560_Final_Project.exe: CXX_EXECUTABLE_LINKER__EECE2560_Final_Project_Debug CMakeFiles/EECE2560_Final_Project.dir/main.cpp.obj CMakeFiles/EECE2560_Final_Project.dir/Market.cpp.obj
+build EECE2560_Final_Project.exe: CXX_EXECUTABLE_LINKER__EECE2560_Final_Project_Debug CMakeFiles/EECE2560_Final_Project.dir/main.cpp.obj CMakeFiles/EECE2560_Final_Project.dir/Market.cpp.obj CMakeFiles/EECE2560_Final_Project.dir/Algorithm.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\EECE2560_Final_Project.dir

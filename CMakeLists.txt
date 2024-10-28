@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 20)
 add_executable(EECE2560_Final_Project main.cpp
         Market.cpp
         Market.h
+        Algorithm.cpp
+        Algorithm.h
 )
 
 #[[
