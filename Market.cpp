@@ -9,7 +9,13 @@ Market::Market() {
 }
 
 string Market::print() {
-
+    ostringstream oss;
+    oss << "Companies in Market" << endl;
+    for(int i = 0; i < companies.size(); i++){
+        oss << companies[i].getTicker();
+        if (i%7 == 1) oss << endl;
+    }
+    return oss.str();
 }
 
 // ----------------------------------------------------------------
