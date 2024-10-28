@@ -56,7 +56,6 @@ public:
     string print();
     Company getCompany();
     void updatePrice();
-
 };
 
 #endif //EECE2560_FINAL_PROJECT_MARKET_H
