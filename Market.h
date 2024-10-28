@@ -13,7 +13,6 @@ using namespace std;
 #ifndef EECE2560_FINAL_PROJECT_MARKET_H
 #define EECE2560_FINAL_PROJECT_MARKET_H
 
-class User;
 class Share;
 class Company;
 class Market;
@@ -29,16 +28,6 @@ private:
     vector<Company> companies;
 public:
     Market();
-    string print();
-};
-
-class User{
-private:
-    string username;
-    string password;
-    vector<Share> owned_shares;
-public:
-    User();
     string print();
 };
 
