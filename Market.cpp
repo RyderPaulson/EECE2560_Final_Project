@@ -4,6 +4,7 @@
 #include <string>
 #include <iomanip>
 
+/*
 tm dateToTime(string date){
     int i = 0;
     string mm, dd, yyyy;
@@ -31,13 +32,7 @@ tm dateToTime(string date){
 
     return cDate;
 }
-
-string printTm(tm date){
-    ostringstream oss;
-    oss<<date.tm_mon - 1<<"/"<<date.tm_mday<<"/"<<date.tm_year;
-
-    return oss.str();
-}
+ */
 
 // ----------------------------------------------------------------
 
@@ -84,6 +79,10 @@ Date::Date(int m, int d, int y) {
     this->year = y;
 }
 
+time_t Date::convertToTime_t() {
+    return 0;
+}
+
 Date Date::operator+(Date *other) {
     Date sum = Date();
     return sum;
@@ -94,11 +93,26 @@ Date Date::operator-(Date *other) {
     return difference;
 }
 
+/*
+ostream &Date::operator<<(ostream &os) {
+    os<<this->month<<"/"<<this->day<<"/"<<this->year;
+    return os;
+}
+ */
+
+string Date::print() {
+    ostringstream oss;
+    oss<<this->month<<"/"<<this->day<<"/"<<this->year;
+    return oss.str();
+}
+
+
+
 // ----------------------------------------------------------------
 
 Company::Company() {
     this->ticker = "AAA";
-    this->curr_share_price = {0, 0};
+    this->curr_share_price = {Date(), 0};
     this->price_history = {this->curr_share_price};
 
 }
@@ -117,7 +131,7 @@ string Company::printHistory() {
     ostringstream oss;
     oss << "Price History for " << ticker << endl;
     for(int i = 0; i < price_history.size(); i++) {
-        oss << "Time: " << printTm(price_history[i].t) << " | Price: " << fixed << setprecision(2) << price_history[i].price << endl;
+        oss << "Time: " << price_history[i].t.print() << " | Price: " << fixed << setprecision(2) << price_history[i].price << endl;
     }
     return oss.str();
 }
