@@ -18,6 +18,8 @@ class Company;
 class Market;
 struct SharePrice;
 
+tm dateToTime(string date);
+
 struct SharePrice{
     time_t t;
     double price;
@@ -43,6 +45,7 @@ public:
     string printHistory();
     string getTicker();
     SharePrice getPrice();
+    vector<SharePrice> getPriceHistory();
 };
 
 class Share{
