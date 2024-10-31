@@ -4,35 +4,41 @@
 #include <string>
 #include <iomanip>
 
-/*
-tm dateToTime(string date){
-    int i = 0;
-    string mm, dd, yyyy;
-    tm cDate;
-
-    while(date[i] != '/') {
-        mm.push_back(date[i]);
-        i++;
-    }
-    i++;
-    while(date[i] != '/') {
-        dd.push_back(date[i]);
-        i++;
-    }
-    i++;
-    while(date[i]) {
-        yyyy.push_back(date[i]);
-        i++;
+Date Time_tToDate(time_t time){
+    Date date;
+    // Convert to UTC tm structure
+    tm* utcTime = gmtime(&time);
+    if (!utcTime) {
+        throw runtime_error("Failed to convert time.");
     }
 
+    // Adjust for New York time zone
+    // New York is typically UTC-5 hours (EST) or UTC-4 hours (EDT during daylight saving time)
+    const int NY_STANDARD_OFFSET = -5; // UTC-5 hours
+    const int NY_DST_OFFSET = -4;      // UTC-4 hours for daylight saving time
 
-    cDate.tm_mon = stoi(mm);
-    cDate.tm_mday = stoi(dd);
-    cDate.tm_year = stoi(yyyy);
+    // Determine if daylight saving time is in effect
+    bool isDST = utcTime->tm_mon > 2 && utcTime->tm_mon < 10; // April to October (simplified check)
+    int nyOffset = isDST ? NY_DST_OFFSET : NY_STANDARD_OFFSET;
 
-    return cDate;
+    // Adjust UTC time by New York offset (in seconds)
+    time_t nyTimeT = time + nyOffset * 3600;
+
+    // Convert to local New York time as tm struct
+    tm* nyTime = gmtime(&nyTimeT);
+    if (nyTime) {
+        cout << "New York Time: ";
+        cout << put_time(nyTime, "%Y-%m-%d %H:%M:%S") << endl;
+    } else {
+        cerr << "Failed to convert time to New York time." << endl;
+    }
+
+    date.month = nyTime->tm_mon + 1;
+    date.day = nyTime->tm_mday;
+    date.year = nyTime->tm_year;
+
+    return date;
 }
- */
 
 // ----------------------------------------------------------------
 
@@ -80,7 +86,12 @@ Date::Date(int m, int d, int y) {
 }
 
 time_t Date::convertToTime_t() {
-    return 0;
+    tm time = tm();
+    time.tm_mon = this->month - 1;
+    time.tm_mday = this->day;
+    time.tm_year = this->year;
+
+    return mktime(&time);
 }
 
 Date Date::operator+(Date *other) {
