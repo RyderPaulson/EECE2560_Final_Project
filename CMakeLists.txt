@@ -4,10 +4,10 @@ project(EECE2560_Final_Project)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(EECE2560_Final_Project main.cpp
-        Market.cpp
-        Market.h
-        Algorithm.cpp
-        Algorithm.h
-        io.cpp
-        io.h
+        lib/Market.cpp
+        lib/Market.h
+        lib/Algorithm.cpp
+        lib/Algorithm.h
+        lib/io.cpp
+        lib/io.h
 )

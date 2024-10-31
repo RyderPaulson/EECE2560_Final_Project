@@ -1,11 +1,10 @@
 // Source File
 
 #include <iostream>
-#include <vector>
-#include <cmath>
-#include "Market.h"
+#include "lib/Market.h"
+#include "lib/Algorithm.h"
+#include "lib/io.h"
 using namespace std;
-
 
 int main() {
     string cname = "NEU";
