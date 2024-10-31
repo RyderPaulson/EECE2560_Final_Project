@@ -19,18 +19,23 @@ class Market;
 struct SharePrice;
 
 tm dateToTime(string date);
+string printTm(tm date);
 
 struct SharePrice{
-    time_t t;
+    tm t;
     double price;
 };
 
-class Market{
-private:
-    vector<Company> companies;
+class Date{
 public:
-    Market();
-    string print();
+    int month, day, year;
+
+    Date();
+    Date(string date);
+    Date(string m, string d, string y);
+    Date(int m, int d, int y);
+    Date operator+(Date* other);
+    Date operator-(Date* other);
 };
 
 class Company{

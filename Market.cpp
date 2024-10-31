@@ -8,44 +8,91 @@ tm dateToTime(string date){
     int i = 0;
     string mm, dd, yyyy;
     tm cDate;
-    while(reinterpret_cast<const char *>(date[i]) != "/") {
-        mm.append(reinterpret_cast<const char *>(date[i]));
+
+    while(date[i] != '/') {
+        mm.push_back(date[i]);
         i++;
     }
     i++;
-    while(reinterpret_cast<const char *>(date[i]) != "/") {
-        dd.append(reinterpret_cast<const char *>(date[i]));
+    while(date[i] != '/') {
+        dd.push_back(date[i]);
         i++;
     }
     i++;
     while(date[i]) {
-        yyyy.append(reinterpret_cast<const char *>(date[i]));
+        yyyy.push_back(date[i]);
         i++;
     }
-    cDate.tm_mon = stod(mm);
-    cDate.tm_mday = stod(dd);
-    cDate.tm_year = stod(yyyy);
+
+
+    cDate.tm_mon = stoi(mm);
+    cDate.tm_mday = stoi(dd);
+    cDate.tm_year = stoi(yyyy);
 
     return cDate;
 }
 
-// ----------------------------------------------------------------
-
-/*
-Market::Market() {
-
-}
-
-string Market::print() {
+string printTm(tm date){
     ostringstream oss;
-    oss << "Companies in Market" << endl;
-    for(int i = 0; i < companies.size(); i++){
-        oss << companies[i].getTicker();
-        if (i%7 == 1) oss << endl;
-    }
+    oss<<date.tm_mon - 1<<"/"<<date.tm_mday<<"/"<<date.tm_year;
+
     return oss.str();
 }
- */
+
+// ----------------------------------------------------------------
+
+Date::Date(){
+    this->month = 1;
+    this->day = 1;
+    this->year = 2024;
+}
+
+Date::Date(string date){
+    int i = 0;
+    string mm, dd, yyyy;
+
+    while(date[i] != '/') {
+        mm.push_back(date[i]);
+        i++;
+    }
+    i++;
+    while(date[i] != '/') {
+        dd.push_back(date[i]);
+        i++;
+    }
+    i++;
+    while(date[i]) {
+        yyyy.push_back(date[i]);
+        i++;
+    }
+
+
+    this->month = stoi(mm);
+    this->day = stoi(dd);
+    this->year = stoi(yyyy);
+}
+
+Date::Date(string m, string d, string y) {
+    this->month = stoi(m);
+    this->day = stoi(d);
+    this->year = stoi(y);
+}
+
+Date::Date(int m, int d, int y) {
+    this->month = m;
+    this->day = d;
+    this->year = y;
+}
+
+Date Date::operator+(Date *other) {
+    Date sum = Date();
+    return sum;
+}
+
+Date Date::operator-(Date *other) {
+    Date difference = Date();
+    return difference;
+}
 
 // ----------------------------------------------------------------
 
@@ -70,7 +117,7 @@ string Company::printHistory() {
     ostringstream oss;
     oss << "Price History for " << ticker << endl;
     for(int i = 0; i < price_history.size(); i++) {
-        oss << "Time: " << price_history[i].t << " | Price: " << fixed << setprecision(2) << price_history[i].price << endl;
+        oss << "Time: " << printTm(price_history[i].t) << " | Price: " << fixed << setprecision(2) << price_history[i].price << endl;
     }
     return oss.str();
 }
