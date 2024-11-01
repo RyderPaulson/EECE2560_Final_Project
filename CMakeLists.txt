@@ -3,11 +3,10 @@ project(EECE2560_Final_Project)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(EECE2560_Final_Project main.cpp
-        lib/Market.cpp
-        lib/Market.h
-        lib/Algorithm.cpp
-        lib/Algorithm.h
-        lib/io.cpp
-        lib/io.h
-)
+set(SOURCE_FILES main.cpp)
+add_executable(EECE2560_Final_Project ${SOURCE_FILES})
+
+include_directories(Forecaster_lib)
+add_subdirectory(Forecaster_lib)
+
+target_link_libraries(EECE2560_Final_Project Forecaster_lib)
