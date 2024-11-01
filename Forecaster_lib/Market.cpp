@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 #include <iomanip>
+#include <sstream>
+#include <ctime>
 
 Date Time_tToDate(time_t time){
     Date date;
@@ -26,16 +28,12 @@ Date Time_tToDate(time_t time){
 
     // Convert to local New York time as tm struct
     tm* nyTime = gmtime(&nyTimeT);
-    if (nyTime) {
-        cout << "New York Time: ";
-        cout << put_time(nyTime, "%Y-%m-%d %H:%M:%S") << endl;
-    } else {
-        cerr << "Failed to convert time to New York time." << endl;
-    }
+    if (!nyTime) cerr << "Failed to convert time to New York time." << endl;
+
 
     date.month = nyTime->tm_mon + 1;
     date.day = nyTime->tm_mday;
-    date.year = nyTime->tm_year;
+    date.year = nyTime->tm_year+1900;
 
     return date;
 }
@@ -86,12 +84,20 @@ Date::Date(int m, int d, int y) {
 }
 
 time_t Date::convertToTime_t() {
-    tm time = tm();
-    time.tm_mon = this->month - 1;
-    time.tm_mday = this->day;
-    time.tm_year = this->year;
+    tm tm = {};
+    istringstream ss(this->print());
+    ss >> get_time(&tm, "%m/%d/%Y");
 
-    return mktime(&time);
+    if (ss.fail()) {
+        throw invalid_argument("Invalid date format");
+    }
+
+    // Set hours, minutes, and seconds to zero for the beginning of the day
+    tm.tm_hour = 4+12-1;
+    tm.tm_min = 0;
+    tm.tm_sec = 0;
+
+    return mktime(&tm);
 }
 
 Date Date::operator+(Date *other) {
