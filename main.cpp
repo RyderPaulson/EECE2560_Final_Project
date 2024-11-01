@@ -1,9 +1,9 @@
 // Source File
 
 #include <iostream>
-#include "lib/Market.h"
-#include "lib/Algorithm.h"
-#include "lib/io.h"
+#include "Market.h"
+#include "Algorithm.h"
+#include "io.h"
 using namespace std;
 
 int main() {
