@@ -13,6 +13,8 @@ class Company;
 
 // Date dateToTime(string date);
 Date Time_tToDate(time_t time);
+time_t convertToTime_t(Date date);
+void addTime_T(vector<SharePrice>& vec);
 
 class Date{
 public:
@@ -22,7 +24,6 @@ public:
     Date(string date);
     Date(string m, string d, string y);
     Date(int m, int d, int y);
-    time_t convertToTime_t();
     Date operator+(Date* other);
     Date operator-(Date* other);
     //ostream& operator<<(ostream& os);
@@ -31,6 +32,7 @@ public:
 
 struct SharePrice{
     Date t;
+    time_t std_t;
     double price;
 };
 

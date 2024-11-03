@@ -28,7 +28,7 @@ bool shareTests(){
 bool testDate(){
     Date test_date = Date("5/24/2004");
     cout<<"test_date: "<<test_date.print()<<endl;
-    time_t test_time = test_date.convertToTime_t();
+    time_t test_time = convertToTime_t(test_date);
     cout<<"test_time: "<<test_time<<endl;
     Date same_date = Time_tToDate(test_time);
     cout<<"Converted back to date: "<<same_date.print()<<endl;
@@ -38,5 +38,5 @@ bool testDate(){
 
 void tests(){
     if(testDate()) cout<<"\n\nDate tests: successful\n\n";
-    shareTests();
+    if(shareTests()) cout<<"\n\nShare tests: successful\n\n";
 }

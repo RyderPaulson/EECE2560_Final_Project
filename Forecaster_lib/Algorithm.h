@@ -12,8 +12,9 @@ using namespace std;
 #define EECE2560_FINAL_PROJECT_ALGORITHM_H
 
 SharePrice forecastValue(Company company); // Entrypoint for algorithm
-vector<SharePrice> meanLine(vector<SharePrice>);
-double volatility(vector<SharePrice>);
-double standardDeviation(vector<SharePrice>);
+vector<SharePrice> meanLine(vector<SharePrice> vec);
+void normalizeXAxis(vector<SharePrice>& vec);
+double volatility(vector<SharePrice>& vec);
+double standardDeviation(vector<SharePrice>& vec);
 
 #endif //EECE2560_FINAL_PROJECT_ALGORITHM_H

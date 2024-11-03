@@ -38,6 +38,27 @@ Date Time_tToDate(time_t time){
     return date;
 }
 
+time_t convertToTime_t(Date date) {
+    tm tm = {};
+    istringstream ss(date.print());
+    ss >> get_time(&tm, "%m/%d/%Y");
+
+    if (ss.fail()) {
+        throw invalid_argument("Invalid date format");
+    }
+
+    // Set hours, minutes, and seconds to zero for the beginning of the day
+    tm.tm_hour = 4+12-1;
+    tm.tm_min = 0;
+    tm.tm_sec = 0;
+
+    return mktime(&tm);
+}
+
+void addTime_T(vector<SharePrice>& vec){
+    for(int i = 0; i < vec.size() - 1; i++) vec[i].std_t = convertToTime_t(vec[i].t);
+}
+
 // ----------------------------------------------------------------
 
 Date::Date(){
@@ -81,23 +102,6 @@ Date::Date(int m, int d, int y) {
     this->month = m;
     this->day = d;
     this->year = y;
-}
-
-time_t Date::convertToTime_t() {
-    tm tm = {};
-    istringstream ss(this->print());
-    ss >> get_time(&tm, "%m/%d/%Y");
-
-    if (ss.fail()) {
-        throw invalid_argument("Invalid date format");
-    }
-
-    // Set hours, minutes, and seconds to zero for the beginning of the day
-    tm.tm_hour = 4+12-1;
-    tm.tm_min = 0;
-    tm.tm_sec = 0;
-
-    return mktime(&tm);
 }
 
 Date Date::operator+(Date *other) {
@@ -154,15 +158,15 @@ string Company::printHistory() {
 }
 
 string Company::getTicker(){
-    return this->ticker;
+    return ticker;
 }
 
 SharePrice Company::getPrice(){
-    return this->curr_share_price;
+    return curr_share_price;
 }
 
 vector<SharePrice> Company::getPriceHistory(){
-    return this->price_history;
+    return price_history;
 }
 
 // ----------------------------------------------------------------
