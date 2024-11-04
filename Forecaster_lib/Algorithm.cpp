@@ -116,10 +116,8 @@ double Regression::standardDeviation() {
     for (int i = 0; i < n; i ++) {
         // sum_y_diff_squared += ( - mean_y) * (point.y - mean_y);
     }
-    double variance_x = sum_x_diff_squared / (n - 1);
     double variance_y = sum_y_diff_squared / (n - 1);
 
-    double x_std_dev = sqrt(variance_x);
     double y_std_dev = sqrt(variance_y);
 }
 

@@ -9,8 +9,27 @@ using namespace std;
 void tests();
 
 int main() {
+    int input;
+    bool while_control = true;
+    cout<<"Would you like to run tests?\n\t1. Yes\n\t2. No\n";
+    cin>>input;
+    if(input==1) tests();
 
-    tests();
+    while(while_control) {
+        cout<<"Choose your action.\n"
+              "\t1. Import data for analysis\n"
+              "\t2. Plot\n"
+              "\t3. End program\n";
+        cin>>input;
+        switch(input){
+            case 1:
+                cout<<"Placeholder";
+            case 2:
+                system("matlab -nodesktop -r MakePlot");
+            default:
+                while_control = false;
+        }
+    }
 
     return 1;
 }
@@ -34,6 +53,10 @@ bool testDate(){
     cout<<"Converted back to date: "<<same_date.print()<<endl;
     if(test_date.print() == same_date.print()) return true;
     return false;
+}
+
+bool testRegression() {
+
 }
 
 void tests(){
