@@ -40,11 +40,13 @@ public:
     vector<SharePrice> mean_line;
     vector<SharePrice> forecasted_line;
     double slope, intercept;
+    Company* company;
 
     // Functions for entering and returning values from regression
     Regression();
     Regression(vector<SharePrice>& vec, int n);
     void importData(vector<SharePrice>& vec, int n);
+    int getSize();
     vector<SharePrice>& getMeanLine();
     vector<SharePrice>& getForecast();
     double getStandardDeviation();

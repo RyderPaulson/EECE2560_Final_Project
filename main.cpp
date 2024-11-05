@@ -63,7 +63,12 @@ bool testRegression() {
 
 }
 
+bool testOutput() {
+
+}
+
 void tests(){
     if(testDate()) cout<<"\n\nDate tests: successful\n\n";
     if(shareTests()) cout<<"\n\nShare tests: successful\n\n";
+    if(testOutput()) cout<<"\n\nOutput tests: successful\n\n";
 }

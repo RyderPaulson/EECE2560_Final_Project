@@ -158,6 +158,10 @@ double Regression::standardInterval() {
     return std_interval;
 }
 
+int Regression::getSize() {
+    return size;
+}
+
 vector<SharePrice>& Regression::getMeanLine() {
     return mean_line;
 }
