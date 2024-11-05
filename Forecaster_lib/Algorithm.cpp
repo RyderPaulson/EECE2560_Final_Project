@@ -5,8 +5,8 @@ using namespace std;
 Regression::Regression() {
     normalized = false;
     calculatedMeanLine = false;
-    coeff = 0;
-    const_term = 0;
+    slope = 0;
+    intercept = 0;
     sum_y = 0;
     sum_y_square = 0;
     sum_x_square = 0;
@@ -14,12 +14,14 @@ Regression::Regression() {
     sum_xy = 0;
 }
 
-Regression::Regression(vector<SharePrice>& vec) {
+Regression::Regression(vector<SharePrice>& vec, int n) {
+    // ------------------------------- Initial setup -------------------------------
     data = vec;
 
     normalizeXAxis();
     standardInterval();
 
+    // ------------------------------- Calculating mean line -------------------------------
     for(int i =0; i < vec.size(); i++) {
         sum_x += data[i].std_t;
         sum_y += data[i].price;
@@ -31,13 +33,40 @@ Regression::Regression(vector<SharePrice>& vec) {
     calculateCoefficient();
     calculateConstantTerm();
 
-    for(int i = 0; i < data.size(); i++) {
-        mean_line.push_back(meanLineFofX(data[i].std_t));
-    }
+    forecastMeanLine(n);
     calculatedMeanLine = true;
 
+    // ------------------------------- Forecasting Values -------------------------------
     calcVolatility();
     standardDeviation();
+    forecastFutureValues(n);
+}
+
+void Regression::importData(vector<SharePrice> &vec, int n) {
+    // ------------------------------- Initial setup -------------------------------
+    data = vec;
+
+    normalizeXAxis();
+    standardInterval();
+
+    // ------------------------------- Calculating mean line -------------------------------
+    for(int i =0; i < data.size(); i++) {
+        sum_x += data[i].std_t;
+        sum_y += data[i].price;
+        sum_xy += data[i].std_t * data[i].price;
+        sum_x_square += data[i].std_t * data[i].std_t;
+        sum_y_square += data[i].price * data[i].price;
+    }
+
+    calculateCoefficient();
+    calculateConstantTerm();
+
+    forecastMeanLine(n);
+
+    // ------------------------------- Forecasting Values -------------------------------
+    calcVolatility();
+    standardDeviation();
+    forecastFutureValues(n);
 }
 
 void Regression::normalizeXAxis() {
@@ -61,8 +90,8 @@ double Regression::calculateCoefficient() {
     double N = data.size();
     float numerator = (N * sum_xy - sum_x * sum_y);
     double denominator = (N * sum_x_square - sum_x * sum_x);
-    coeff = numerator / denominator;
-    return coeff;
+    slope = numerator / denominator;
+    return slope;
 }
 
 double Regression::calculateConstantTerm()
@@ -70,8 +99,8 @@ double Regression::calculateConstantTerm()
     double N = data.size();
     double numerator = sum_y * sum_x_square - sum_x * sum_xy;
     double denominator = N * sum_x_square - sum_x * sum_x;
-    const_term = numerator / denominator;
-    return const_term;
+    intercept = numerator / denominator;
+    return intercept;
 }
 
 void Regression::forecastMeanLine(int n) {
@@ -80,11 +109,10 @@ void Regression::forecastMeanLine(int n) {
         new_values.push_back(meanLineFofX(std_interval*(mean_line.size() + i)));
     }
     mean_line.insert(mean_line.end(), new_values.begin(), new_values.end());
+    calculatedMeanLine = true;
 }
 
 void Regression::forecastFutureValues(int n) {
-    forecastMeanLine(n);
-
     double deviation;
     SharePrice sp;
 
@@ -97,28 +125,27 @@ void Regression::forecastFutureValues(int n) {
         sp.price = deviation/std_deviation*volatility;
         forecasted_line.push_back(sp);
     }
-
 }
 
 SharePrice Regression::meanLineFofX(time_t x) {
     SharePrice sp;
     sp.std_t = x;
-    sp.price = coeff * x + const_term;
+    sp.price = slope * x + intercept;
     return sp;
 }
 
 double Regression::standardDeviation() {
-    int n = data.size();
+    int n = initial_size;
 
     double mean_y = sum_y / n;
 
-    double sum_x_diff_squared = 0, sum_y_diff_squared = 0;
+    double sum_y_diff_squared = 0;
     for (int i = 0; i < n; i ++) {
-        // sum_y_diff_squared += ( - mean_y) * (point.y - mean_y);
+        sum_y_diff_squared += pow((data[i].price - mean_y), 2);
     }
     double variance_y = sum_y_diff_squared / (n - 1);
 
-    double y_std_dev = sqrt(variance_y);
+    std_deviation = sqrt(variance_y);
 }
 
 double Regression::standardInterval() {
@@ -130,3 +157,22 @@ double Regression::standardInterval() {
     std_interval = sum/data.size();
     return std_interval;
 }
+
+vector<SharePrice>& Regression::getMeanLine() {
+    return mean_line;
+}
+
+vector<SharePrice>& Regression::getForecast() {
+    return forecasted_line;
+}
+
+double Regression::getStandardDeviation() {
+    return std_deviation;
+}
+
+
+
+
+
+
+

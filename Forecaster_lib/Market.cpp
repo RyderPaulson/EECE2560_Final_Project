@@ -7,6 +7,8 @@
 #include <ctime>
 
 Date Time_tToDate(time_t time){
+    // This section was pulled from online.
+
     Date date;
     // Convert to UTC tm structure
     tm* utcTime = gmtime(&time);
@@ -41,7 +43,7 @@ Date Time_tToDate(time_t time){
 time_t convertToTime_t(Date date) {
     tm tm = {};
     istringstream ss(date.print());
-    ss >> get_time(&tm, "%m/%d/%Y");
+    ss >> get_time(&tm, "%m/%d/%Y");    // CLion shows error but runs fine
 
     if (ss.fail()) {
         throw invalid_argument("Invalid date format");

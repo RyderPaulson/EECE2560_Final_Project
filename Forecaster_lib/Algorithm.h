@@ -17,8 +17,6 @@ private:
     vector<SharePrice> modified_data;
     bool normalized, calculatedMeanLine;
     int initial_size, size;
-    double coeff;
-    double const_term;
     double sum_xy;
     double sum_x;
     double sum_y;
@@ -28,13 +26,7 @@ private:
     double std_interval;
     double std_deviation;
 
-public:
-    vector<SharePrice> mean_line;
-    vector<SharePrice> forecasted_line;
-    double slope, intercept;
-
-    Regression();
-    Regression(vector<SharePrice>& vec);
+    // Functions for generating regression
     void normalizeXAxis();
     double calcVolatility();
     double calculateCoefficient();
@@ -44,6 +36,18 @@ public:
     SharePrice meanLineFofX(time_t x);
     double standardDeviation();
     double standardInterval();
+public:
+    vector<SharePrice> mean_line;
+    vector<SharePrice> forecasted_line;
+    double slope, intercept;
+
+    // Functions for entering and returning values from regression
+    Regression();
+    Regression(vector<SharePrice>& vec, int n);
+    void importData(vector<SharePrice>& vec, int n);
+    vector<SharePrice>& getMeanLine();
+    vector<SharePrice>& getForecast();
+    double getStandardDeviation();
 };
 
 

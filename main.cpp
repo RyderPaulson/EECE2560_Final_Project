@@ -23,12 +23,16 @@ int main() {
         cin>>input;
         switch(input){
             case 1:
-                cout<<"Placeholder";
+                cout<<"Placeholder\n";
+                break;
             case 2:
+                cout<<"Generating plot\n";
                 system("matlab -nodesktop -r MakePlot");
+                break;
             default:
                 while_control = false;
         }
+        cout<<"\n\n"<<endl;
     }
 
     return 1;
