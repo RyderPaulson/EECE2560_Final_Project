@@ -10,7 +10,7 @@ Forecasted = T.Forecasted;
 % Get rid of this in final version
 MeanLine = ([1:1:29]*1.75261+100.301).';
 
-figure 1
+figure
 plot(Dates, Price);
 hold on
 plot(Dates, MeanLine);

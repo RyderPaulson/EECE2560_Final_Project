@@ -1,3 +1,22 @@
+/*
+ * General tips for using these classes:
+ * 1. If you need to print one out, use a normal cout, ostream, oss,
+ * etc but then use the .print() method. This will returns a string
+ * which will then be printed.
+ * 2. SharePrice has two time variables. t is better for human readability
+ * while std_t is better for math.
+ * 3. Broad class structure:
+ *      a. Company - vector of SharePrices (price_history)
+ *      b. SharePrice - kindof like an (x,y) point where
+ *      time is x and y is price. std_t should be used for math
+ *      and t should be used for io.
+ *      c. Date - a class representing a date. Can be constructed
+ *      using one string ('mm/dd/yyyy'), 3 strings ('mm', 'dd', 'yyyy')
+ *      or 3 ints (m, d, y).
+ *
+ * I ended up not really using the Share class for anything.
+ */
+
 #include <string>
 #include <vector>
 #include <ctime>
@@ -11,7 +30,6 @@ struct SharePrice;
 class Share;
 class Company;
 
-// Date dateToTime(string date);
 Date Time_tToDate(time_t time);
 time_t convertToTime_t(Date date);
 void addTime_T(vector<SharePrice>& vec);
@@ -26,7 +44,6 @@ public:
     Date(int m, int d, int y);
     Date operator+(Date* other);
     Date operator-(Date* other);
-    //ostream& operator<<(ostream& os);
     string print();
 };
 

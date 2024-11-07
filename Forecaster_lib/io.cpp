@@ -1,5 +1,9 @@
 #include "io.h"
 
+vector<SharePrice> inputCSV(string name) {
+
+}
+
 void outputCSV(Regression forecast){
     fstream fout;
     bool start_forecast = false;
@@ -11,8 +15,8 @@ void outputCSV(Regression forecast){
     fout<<date;
     fout<<","<<forecast.company->getPriceHistory()[0].price;
     fout<<","<<forecast.mean_line[0].price<<",,"<<forecast.company->getTicker()<<endl;
-
     fout<<"Date,Price,MeanLine,Forecasted,Ticker"<<endl;
+
     for(int i = 1; i < forecast.getSize(); i++) {
         date = forecast.company->getPriceHistory()[i].t.print();
         fout<<date;

@@ -38,9 +38,15 @@ private:
     double standardInterval();
 public:
     vector<SharePrice> mean_line;
+    // Mean line should have values for every original data point
+    // and every forecasted data point
+
     vector<SharePrice> forecasted_line;
+    // Index 0 of the forecasted line should be the same as the last
+    // element in the original data so that the line looks continuous
+
     double slope, intercept;
-    Company* company;
+    Company* company;   // Point to company the data is from.
 
     // Functions for entering and returning values from regression
     Regression();

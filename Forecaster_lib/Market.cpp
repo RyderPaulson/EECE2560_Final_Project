@@ -6,6 +6,7 @@
 #include <sstream>
 #include <ctime>
 
+// Converts a ctime time_t var to the Date class.
 Date Time_tToDate(time_t time){
     // This section was pulled from online.
 
@@ -31,7 +32,7 @@ Date Time_tToDate(time_t time){
     // Convert to local New York time as tm struct
     tm* nyTime = gmtime(&nyTimeT);
     if (!nyTime) cerr << "Failed to convert time to New York time." << endl;
-
+    // End of section from online
 
     date.month = nyTime->tm_mon + 1;
     date.day = nyTime->tm_mday;
@@ -40,6 +41,7 @@ Date Time_tToDate(time_t time){
     return date;
 }
 
+// Converts a date class to the time_t var.
 time_t convertToTime_t(Date date) {
     tm tm = {};
     istringstream ss(date.print());
@@ -50,13 +52,14 @@ time_t convertToTime_t(Date date) {
     }
 
     // Set hours, minutes, and seconds to zero for the beginning of the day
-    tm.tm_hour = 4+12-1;
+    tm.tm_hour = 4+12-1; // Set for market close (4pm) and subtracts one because tm_hour range: [0-23].
     tm.tm_min = 0;
     tm.tm_sec = 0;
 
     return mktime(&tm);
 }
 
+// Fills in the std_t var in the SharePrice struct.
 void addTime_T(vector<SharePrice>& vec){
     for(int i = 0; i < vec.size() - 1; i++) vec[i].std_t = convertToTime_t(vec[i].t);
 }
@@ -115,13 +118,6 @@ Date Date::operator-(Date *other) {
     Date difference = Date();
     return difference;
 }
-
-/*
-ostream &Date::operator<<(ostream &os) {
-    os<<this->month<<"/"<<this->day<<"/"<<this->year;
-    return os;
-}
- */
 
 string Date::print() {
     ostringstream oss;
