@@ -146,6 +146,7 @@ double Regression::standardDeviation() {
     double variance_y = sum_y_diff_squared / (n - 1);
 
     std_deviation = sqrt(variance_y);
+    return std_deviation;
 }
 
 double Regression::standardInterval() {

@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <sstream>
 #include <ctime>
+#include <fstream>
+#include <stdexcept>
 
 // Converts a ctime time_t var to the Date class.
 Date Time_tToDate(time_t time){
@@ -119,7 +121,7 @@ Date Date::operator-(Date *other) {
     return difference;
 }
 
-string Date::print() {
+string Date::print() const{
     ostringstream oss;
     oss<<this->month<<"/"<<this->day<<"/"<<this->year;
     return oss.str();
@@ -140,6 +142,15 @@ Company::Company(string t, vector<SharePrice> ph) {
     this->ticker = t;
     this->price_history = ph;
     this->curr_share_price = price_history.back();
+}
+
+Company::Company(string& t, string& filename) {
+    this->ticker = t;
+    //this->price_history = ph;
+    this->price_history = readCSV(filename);
+    if (!price_history.empty()) {
+        this->curr_share_price = price_history.back(); // Set the current share price to the most recent one
+    }
 }
 
 string Company::print() {
@@ -189,4 +200,98 @@ Company Share::getCompany() {
 
 void Share::updatePrice() {
     this->current_price = this->company.getPrice();
+}
+
+//Function to parse line of CSV data into SharePrice
+SharePrice parseCSVLine(string& line) {
+    stringstream ss(line);
+    string dateStr, openStr, highStr, lowStr, closeStr, volumeStr;
+
+    // Read each field separated by commas
+    getline(ss, dateStr, ',');
+    getline(ss, openStr, ',');
+    getline(ss, highStr, ',');
+    getline(ss, lowStr, ',');
+    getline(ss, closeStr, ',');
+    getline(ss, volumeStr, ',');
+    // Ensure the closeStr is not empty
+    if (closeStr.empty()) {
+        cerr << "Error: Empty 'Close' value on line: " << line << endl;
+        throw invalid_argument("Empty close value");
+    }
+
+    // Convert the strings to appropriate types
+    Date date(dateStr);
+    try {
+        // Remove quotes from the string if they are present
+        if (closeStr.front() == '"' && closeStr.back() == '"') {
+            closeStr.erase(0, 1); // Remove the first quote
+            closeStr.erase(closeStr.size() - 1); // Remove the last quote
+        }
+        double close = stod(closeStr);
+        SharePrice sp;
+        sp.t = date;
+        sp.price = close;
+        sp.std_t = convertToTime_t(date);
+        return sp;
+    } catch (const std::exception& e) {
+        cerr << "Error converting 'Close' to double: " << closeStr << endl;
+        throw;
+    }
+}
+
+vector<SharePrice> readCSV(const string& filename) {
+    ifstream file(filename);
+    vector<SharePrice> priceHistory;
+    if (!file.is_open()) {
+        cerr << "Error opening file: " << filename << endl;
+        return priceHistory;
+    }
+    string line;// Ignore header
+    if (!getline(file, line)) {
+        cerr << "Error reading the header line." << endl;
+        return priceHistory;
+    }
+    while (getline(file, line)) {
+        try {
+            SharePrice sp = parseCSVLine(line);
+            priceHistory.push_back(sp);
+        } catch (const std::invalid_argument& e) {
+            cerr << "Skipping invalid line: " << line << endl;
+        }
+    }
+    file.close();
+    return priceHistory;
+}
+
+// Convert data from Company object to MATLAB-friendly format
+string formatForMatlab(Company& company, const std::vector<SharePrice>& meanLine, const std::vector<SharePrice>& forecasted) {
+    const auto& priceHistory = company.getPriceHistory();
+    std::stringstream datesStream, pricesStream, meanLineStream, forecastedStream;
+    // Extract Dates and Prices from the company data
+    for (const auto& sp : priceHistory) {
+        datesStream << "'" << sp.t.print() << "',"; // Add quotes around dates
+        pricesStream << sp.price << ",";
+    }
+    // Extract MeanLine data
+    for (const auto& sp : meanLine) {
+        meanLineStream << sp.price << ",";
+    }
+    // Extract Forecasted data
+    for (const auto& sp : forecasted) {
+        forecastedStream << sp.price << ",";
+    }
+    // Remove trailing commas
+    string dates = datesStream.str(); dates.pop_back();
+    string prices = pricesStream.str(); prices.pop_back();
+    string meanLineStr = meanLineStream.str(); meanLineStr.pop_back();
+    string forecastedStr = forecastedStream.str(); forecastedStr.pop_back();
+    // Format as MATLAB-compatible inputs
+    return "{" + dates + "}, [" + prices + "], [" + meanLineStr + "], [" + forecastedStr + "]";
+}
+
+void plotCompanyData(Company& company, const std::vector<SharePrice>& meanLine, const std::vector<SharePrice>& forecasted) {
+    std::string dataString = formatForMatlab(company, meanLine, forecasted);
+    std::string command = "matlab -nodesktop -nosplash -r \"MakePlot(" + dataString + "); exit\"";
+    system(command.c_str());
 }

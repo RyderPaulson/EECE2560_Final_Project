@@ -4,11 +4,16 @@
 #include "Market.h"
 #include "Algorithm.h"
 #include "io.h"
+#include <sstream>
 using namespace std;
 
 void tests();
+string getFilePathFromUser();
+string extractCompanyName(const string& filepath);
+void PlotData(const string& filepath);
 
 int main() {
+    string filePath;
     int input;
     bool while_control = true;
     cout<<"Would you like to run tests?\n\t1. Yes\n\t2. No\n";
@@ -22,19 +27,26 @@ int main() {
               "\t3. End program\n";
         cin>>input;
         switch(input){
-            case 1:
-                cout<<"Placeholder\n";
+            case 1: {
+                //cout<<"Placeholder\n";
+                filePath = getFilePathFromUser();
+                cout << "Data file path saved: " << filePath << endl;
                 break;
-            case 2:
+            }
+            case 2: {
                 cout<<"Generating plot\n";
-                system("matlab -nodesktop -r MakePlot");
+                //system("matlab -nodesktop -r MakePlot");
+                PlotData(filePath);
                 break;
+            }
             default:
                 while_control = false;
         }
         cout<<"\n\n"<<endl;
     }
 
+    //string filename = "C:/Users/kl198/CLionProjects/EECE2560_Final_Project/data/AAPL 10.2.2023 - 10.1.2024.csv";
+    //Company test("AAPL",filename);
     return 1;
 }
 
@@ -60,15 +72,46 @@ bool testDate(){
 }
 
 bool testRegression() {
-
+    return 0; //PLACEHOLDER
 }
 
 bool testOutput() {
-
+    return 0; //PLACEHOLDER
 }
 
 void tests(){
     if(testDate()) cout<<"\n\nDate tests: successful\n\n";
     if(shareTests()) cout<<"\n\nShare tests: successful\n\n";
     if(testOutput()) cout<<"\n\nOutput tests: successful\n\n";
+}
+
+void PlotData(const string& filepath) {
+    vector<SharePrice> priceHistory = readCSV(filepath);
+    string companyName = extractCompanyName(filepath);
+    Company company(companyName, priceHistory);
+    Regression reg(priceHistory, 30);
+    vector<SharePrice> meanLine = reg.getMeanLine();
+    vector<SharePrice> forecasted = reg.getForecast();
+    plotCompanyData(company, meanLine, forecasted);
+}
+
+// Function to extract the company name from the file path
+string extractCompanyName(const string& filepath) {
+    size_t lastSlashPos = filepath.find_last_of("/\\");
+    string filename = (lastSlashPos == string::npos) ? filepath : filepath.substr(lastSlashPos + 1);
+    size_t dotPos = filename.find_last_of('.');
+    if (dotPos != string::npos) {
+        filename = filename.substr(0, dotPos);
+    }
+    size_t spacePos = filename.find(' ');
+    string companyName = (spacePos != string::npos) ? filename.substr(0, spacePos) : filename;
+    return companyName;
+}
+
+string getFilePathFromUser() {
+    string path;
+    cout << "Enter the full path to the CSV data file: ";
+    cin.ignore(); // Clear input buffer
+    getline(cin, path); // Get entire line in case of spaces
+    return path;
 }

@@ -1,8 +1,6 @@
 #include "io.h"
+#include <sstream>
 
-vector<SharePrice> inputCSV(string name) {
-
-}
 
 void outputCSV(Regression forecast){
     fstream fout;
