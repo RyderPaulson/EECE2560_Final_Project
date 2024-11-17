@@ -33,10 +33,11 @@ class Company;
 Date Time_tToDate(time_t time);
 time_t convertToTime_t(Date date);
 void addTime_T(vector<SharePrice>& vec);
+void addDate(vector<SharePrice>& vec);
 vector<SharePrice> readCSV(const std::string& filename);
 SharePrice parseCSVLine(std::string& line);
-string formatForMatlab(const Company& company, const std::vector<SharePrice>& meanLine, const std::vector<SharePrice>& forecasted);
-void plotCompanyData(Company& company, const std::vector<SharePrice>& meanLine, const std::vector<SharePrice>& forecasted);
+string formatForMatlab(const Company& company, const vector<SharePrice>& meanLine, const vector<SharePrice>& forecasted);
+void plotCompanyData(Company& company, const vector<SharePrice>& meanLine, const vector<SharePrice>& forecasted);
 
 class Date{
 public:

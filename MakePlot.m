@@ -1,7 +1,7 @@
-%{
+
 % Change to just output.csv in final version
-%T = readtable("data/Example Output.csv");
-T = readtable("C:/Users/kl198/CLionProjects/EECE2560_Final_Project/data/Example Output.csv");
+T = readtable("data/Output.csv");
+%T = readtable("C:/Users/kl198/CLionProjects/EECE2560_Final_Project/data/Example Output.csv");
 
 Ticker = T.Ticker(1);
 Dates = datetime(T.Date, 'InputFormat', 'MM/dd/yyyy');
@@ -10,9 +10,9 @@ MeanLine = T.MeanLine;
 Forecasted = T.Forecasted;
 
 % Get rid of this in final version
-MeanLine = ([1:1:29]*1.75261+100.301).';
+% MeanLine = ([1:1:29]*1.75261+100.301).';
 
-figure
+figure(1)
 plot(Dates, Price);
 hold on
 plot(Dates, MeanLine);
@@ -22,8 +22,8 @@ title(Ticker);
 legend('Price', 'Mean','Forecasted','Location','southeast');
 xlabel('Date')
 ylabel('Price ($)')
-%}
 
+%{
 function MakePlot(dates, prices, meanLine, forecasted)
     % Convert dates from cell array of strings to datetime format
     Dates = datetime(dates, 'InputFormat', 'MM/dd/yyyy');
@@ -41,3 +41,4 @@ function MakePlot(dates, prices, meanLine, forecasted)
     ylabel('Price ($)');
     pause;
 end
+%}

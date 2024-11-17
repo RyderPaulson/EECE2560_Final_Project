@@ -10,15 +10,18 @@ using namespace std;
 void tests();
 string getFilePathFromUser();
 string extractCompanyName(const string& filepath);
-void PlotData(const string& filepath);
+void PlotData(const string& filepath, int n);
 
 int main() {
     string filePath;
     int input;
     bool while_control = true;
+
+    /*
     cout<<"Would you like to run tests?\n\t1. Yes\n\t2. No\n";
     cin>>input;
     if(input==1) tests();
+     */
 
     while(while_control) {
         cout<<"Choose your action.\n"
@@ -28,15 +31,15 @@ int main() {
         cin>>input;
         switch(input){
             case 1: {
-                //cout<<"Placeholder\n";
                 filePath = getFilePathFromUser();
                 cout << "Data file path saved: " << filePath << endl;
                 break;
             }
             case 2: {
-                cout<<"Generating plot\n";
-                //system("matlab -nodesktop -r MakePlot");
-                PlotData(filePath);
+                cout<<"How many days out would you like for forecast?"<<endl;
+                cin>>input;
+                cout<<"\nGenerating plot ...\n";
+                PlotData(filePath, input);
                 break;
             }
             default:
@@ -45,8 +48,6 @@ int main() {
         cout<<"\n\n"<<endl;
     }
 
-    //string filename = "C:/Users/kl198/CLionProjects/EECE2560_Final_Project/data/AAPL 10.2.2023 - 10.1.2024.csv";
-    //Company test("AAPL",filename);
     return 1;
 }
 
@@ -71,28 +72,26 @@ bool testDate(){
     return false;
 }
 
-bool testRegression() {
-    return 0; //PLACEHOLDER
-}
-
-bool testOutput() {
-    return 0; //PLACEHOLDER
-}
-
 void tests(){
     if(testDate()) cout<<"\n\nDate tests: successful\n\n";
     if(shareTests()) cout<<"\n\nShare tests: successful\n\n";
-    if(testOutput()) cout<<"\n\nOutput tests: successful\n\n";
+    // if(testOutput()) cout<<"\n\nOutput tests: successful\n\n";
 }
 
-void PlotData(const string& filepath) {
+void PlotData(const string& filepath, int n) {
+    bool successful_output;
     vector<SharePrice> priceHistory = readCSV(filepath);
     string companyName = extractCompanyName(filepath);
-    Company company(companyName, priceHistory);
-    Regression reg(priceHistory, 30);
-    vector<SharePrice> meanLine = reg.getMeanLine();
-    vector<SharePrice> forecasted = reg.getForecast();
-    plotCompanyData(company, meanLine, forecasted);
+    Company current_company = Company(companyName, priceHistory);
+    Regression forecast = Regression(priceHistory, n, current_company);
+
+    successful_output = outputCSV(forecast);
+
+    if(successful_output) {
+        system("matlab -nodesktop -r MakePlot");
+    }
+
+    return;
 }
 
 // Function to extract the company name from the file path

@@ -1,40 +1,53 @@
 #include "io.h"
-#include <sstream>
 
 
-void outputCSV(Regression forecast){
+
+bool outputCSV(Regression forecast){
     fstream fout;
     bool start_forecast = false;
     int forecast_start;
     string date;
-    fout.open("data/output.csv");
 
-    date = forecast.company->getPriceHistory()[0].t.print();
-    fout<<date;
-    fout<<","<<forecast.company->getPriceHistory()[0].price;
-    fout<<","<<forecast.mean_line[0].price<<",,"<<forecast.company->getTicker()<<endl;
+    fout.open("data/output.csv", ios::out);
+
+    if(!fout.is_open()) {
+        cerr << "Failed to open file. Current working directory is: " << filesystem::current_path() << endl;
+        return false;
+    }
+
     fout<<"Date,Price,MeanLine,Forecasted,Ticker"<<endl;
+    date = forecast.getNthDate(0).print();
+    fout<<date;
+    fout<<","<<forecast.getNthPrice(0);
+    fout<<","<<forecast.mean_line[0].price<<",,"<<forecast.company->getTicker()<<endl;
 
-    for(int i = 1; i < forecast.getSize(); i++) {
-        date = forecast.company->getPriceHistory()[i].t.print();
+    for(int i = 1; i < forecast.getSize() - 1; i++) {
+        date = forecast.getNthDate(i).print();
         fout<<date;
-        fout<<","<<forecast.company->getPriceHistory()[i].price;
-        fout<<","<<forecast.mean_line[i].price;
-        if(date == forecast.forecasted_line[0].t.print()) {
+        if(i == forecast.getInitialSize() - 1) {
             // Check to see if the forecast line has started yet
             start_forecast = true;
             forecast_start = i;
-        }
-        if(start_forecast) {
-            // If started, print it
+            fout<<","<<forecast.getNthPrice(i);
+            fout<<","<<forecast.mean_line[i].price;
             fout<<","<<forecast.forecasted_line[i-forecast_start].price;
+            fout<<","<<endl;
         }
-        else {
+        if(start_forecast && (i != forecast_start)) {
+            // If started, print it
+            fout<<",,"<<forecast.mean_line[i].price;
+            fout<<","<<forecast.forecasted_line[i-forecast_start].price;
+            fout<<","<<endl;
+        }
+        else if(!start_forecast){
             // Otherwise just print comma to make empty value
-            fout<<",";
+            fout<<","<<forecast.getNthPrice(i);
+            fout<<","<<forecast.mean_line[i].price;
+            fout<<",,"<<endl;
         }
-        fout<<","<<endl;
     }
 
     fout.close();
+
+    return true;
 }

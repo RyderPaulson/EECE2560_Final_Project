@@ -63,7 +63,11 @@ time_t convertToTime_t(Date date) {
 
 // Fills in the std_t var in the SharePrice struct.
 void addTime_T(vector<SharePrice>& vec){
-    for(int i = 0; i < vec.size() - 1; i++) vec[i].std_t = convertToTime_t(vec[i].t);
+    for(int i = 0; i < vec.size(); i++) vec[i].std_t = convertToTime_t(vec[i].t);
+}
+
+void addDate(vector<SharePrice>& vec) {
+    for(int i = 0; i < vec.size(); i++) vec[i].t = Time_tToDate(vec[i].std_t);
 }
 
 // ----------------------------------------------------------------
@@ -234,7 +238,7 @@ SharePrice parseCSVLine(string& line) {
         sp.price = close;
         sp.std_t = convertToTime_t(date);
         return sp;
-    } catch (const std::exception& e) {
+    } catch (const exception& e) {
         cerr << "Error converting 'Close' to double: " << closeStr << endl;
         throw;
     }
@@ -256,7 +260,7 @@ vector<SharePrice> readCSV(const string& filename) {
         try {
             SharePrice sp = parseCSVLine(line);
             priceHistory.push_back(sp);
-        } catch (const std::invalid_argument& e) {
+        } catch (const invalid_argument& e) {
             cerr << "Skipping invalid line: " << line << endl;
         }
     }
@@ -265,9 +269,9 @@ vector<SharePrice> readCSV(const string& filename) {
 }
 
 // Convert data from Company object to MATLAB-friendly format
-string formatForMatlab(Company& company, const std::vector<SharePrice>& meanLine, const std::vector<SharePrice>& forecasted) {
+string formatForMatlab(Company& company, const vector<SharePrice>& meanLine, const vector<SharePrice>& forecasted) {
     const auto& priceHistory = company.getPriceHistory();
-    std::stringstream datesStream, pricesStream, meanLineStream, forecastedStream;
+    stringstream datesStream, pricesStream, meanLineStream, forecastedStream;
     // Extract Dates and Prices from the company data
     for (const auto& sp : priceHistory) {
         datesStream << "'" << sp.t.print() << "',"; // Add quotes around dates
@@ -290,8 +294,8 @@ string formatForMatlab(Company& company, const std::vector<SharePrice>& meanLine
     return "{" + dates + "}, [" + prices + "], [" + meanLineStr + "], [" + forecastedStr + "]";
 }
 
-void plotCompanyData(Company& company, const std::vector<SharePrice>& meanLine, const std::vector<SharePrice>& forecasted) {
-    std::string dataString = formatForMatlab(company, meanLine, forecasted);
-    std::string command = "matlab -nodesktop -nosplash -r \"MakePlot(" + dataString + "); exit\"";
+void plotCompanyData(Company& company, const vector<SharePrice>& meanLine, const vector<SharePrice>& forecasted) {
+    string dataString = formatForMatlab(company, meanLine, forecasted);
+    string command = "matlab -nodesktop -nosplash -r \"MakePlot(" + dataString + "); exit\"";
     system(command.c_str());
 }

@@ -6,6 +6,7 @@
 #include <string>
 #include <ctime>
 #include <cmath>
+#include <random>
 using namespace std;
 
 #ifndef EECE2560_FINAL_PROJECT_ALGORITHM_H
@@ -28,11 +29,13 @@ private:
 
     // Functions for generating regression
     void normalizeXAxis();
+    void denormalizeXAxis(time_t norm_factor);
     double calcVolatility();
     double calculateCoefficient();
     double calculateConstantTerm();
     void forecastMeanLine(int n);
     void forecastFutureValues(int n);
+    double addRandomness(double price);
     SharePrice meanLineFofX(time_t x);
     double standardDeviation();
     double standardInterval();
@@ -50,11 +53,14 @@ public:
 
     // Functions for entering and returning values from regression
     Regression();
-    Regression(vector<SharePrice>& vec, int n);
+    Regression(vector<SharePrice>& vec, int n, Company &c);
     void importData(vector<SharePrice>& vec, int n);
     int getSize();
+    int getInitialSize();
     vector<SharePrice>& getMeanLine();
     vector<SharePrice>& getForecast();
+    Date getNthDate(int n);
+    double getNthPrice(int n);
     double getStandardDeviation();
 };
 

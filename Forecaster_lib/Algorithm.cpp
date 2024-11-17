@@ -1,5 +1,6 @@
 #include "Algorithm.h"
 #include "Market.h"
+#include <algorithm>
 using namespace std;
 
 Regression::Regression() {
@@ -14,9 +15,28 @@ Regression::Regression() {
     sum_xy = 0;
 }
 
-Regression::Regression(vector<SharePrice>& vec, int n) {
+Regression::Regression(vector<SharePrice>& vec, int n, Company &c) {
     // ------------------------------- Initial setup -------------------------------
+    company = &c;
+    initial_size = vec.size();
+    size = initial_size;
+    slope = 0;
+    intercept = 0;
+    sum_y = 0;
+    sum_y_square = 0;
+    sum_x_square = 0;
+    sum_x = 0;
+    sum_xy = 0;
+    volatility = 0;
+    std_interval = 0;
+    std_deviation = 0;
+
     data = vec;
+
+    // Reverse if not in ascending order
+    if(data[1].std_t<=data[0].std_t) {
+        reverse(data.begin(), data.end());
+    }
 
     normalizeXAxis();
     standardInterval();
@@ -40,6 +60,12 @@ Regression::Regression(vector<SharePrice>& vec, int n) {
     calcVolatility();
     standardDeviation();
     forecastFutureValues(n);
+
+    size = mean_line.size();
+
+    denormalizeXAxis(vec[initial_size-1].std_t);
+    addDate(mean_line);
+    addDate(forecasted_line);
 }
 
 void Regression::importData(vector<SharePrice> &vec, int n) {
@@ -71,10 +97,23 @@ void Regression::importData(vector<SharePrice> &vec, int n) {
 
 void Regression::normalizeXAxis() {
     double norm_factor = data[0].std_t;
-    for(int i = 0; i < data.size() - 1; i++) {
+    for(int i = 0; i < data.size(); i++) {
         data[i].std_t -= norm_factor;
     }
     normalized = true;
+}
+
+void Regression::denormalizeXAxis(time_t norm_factor) {
+    for(int i = 0; i < initial_size; i++) {
+        data[i].std_t += norm_factor;
+    }
+    for(int i = 0; i < mean_line.size(); i++) {
+        mean_line[i].std_t += norm_factor;
+    }
+    for(int i = 0; i < forecasted_line.size(); i++) {
+        forecasted_line[i].std_t += norm_factor;
+    }
+    normalized = false;
 }
 
 double Regression::calcVolatility() {
@@ -83,7 +122,7 @@ double Regression::calcVolatility() {
         numerator += data[i+1].price - data[i].price;
     }
     volatility = numerator/data.size();
-    return numerator/data.size();
+    return volatility;
 }
 
 double Regression::calculateCoefficient() {
@@ -104,27 +143,50 @@ double Regression::calculateConstantTerm()
 }
 
 void Regression::forecastMeanLine(int n) {
-    vector<SharePrice> new_values;
-    for(int i = 0; i < n; i++) {
-        new_values.push_back(meanLineFofX(std_interval*(mean_line.size() + i)));
+    for(int i = 0; i < initial_size; i++) {
+        mean_line.push_back(meanLineFofX(data[i].std_t));
     }
-    mean_line.insert(mean_line.end(), new_values.begin(), new_values.end());
+    for(int i = initial_size; i < initial_size + n; i++) {
+        mean_line.push_back(meanLineFofX(std_interval*(i)));
+    }
     calculatedMeanLine = true;
 }
 
 void Regression::forecastFutureValues(int n) {
-    double deviation;
+    double deviation = 0, change = 0;
     SharePrice sp;
 
-    sp.std_t = data.end()->std_t;
-    deviation = data[size].price - mean_line[size].price;
-    sp.price = deviation/std_deviation*volatility;
+    forecasted_line.push_back(data[initial_size - 1]);
     for(int i = 1; i < n; i++) {
-        sp.std_t = std_interval*(size+i);
-        deviation = data[i-1].price - mean_line[i-1].price;
-        sp.price = deviation/std_deviation*volatility;
+        sp.std_t = mean_line[initial_size - 1 + i].std_t;
+        deviation = forecasted_line[i-1].price - mean_line[initial_size - 1 + i].price;
+        change = 2 * deviation/std_deviation*volatility;
+        sp.price = forecasted_line[i-1].price - addRandomness(change);
+
         forecasted_line.push_back(sp);
     }
+}
+
+double Regression::addRandomness(double price) {
+    // Random number generator
+    random_device rd;
+    mt19937 generator(rd());
+
+    int value;
+
+    normal_distribution normal(25.0, std_deviation);
+    binomial_distribution binomial(static_cast<int>(std_deviation), 0.5);
+    bernoulli_distribution bernoulli(0.5);
+
+    value = binomial(generator);
+    //value = normal(generator);
+    price = price * value;
+
+    int upOrDown = bernoulli(generator);
+
+    if(upOrDown == 1) return -1 * price;
+
+    return price;
 }
 
 SharePrice Regression::meanLineFofX(time_t x) {
@@ -152,15 +214,16 @@ double Regression::standardDeviation() {
 double Regression::standardInterval() {
     double sum = 0;
     if(!normalized) normalizeXAxis();
-    for(int i = 0; i < data.size(); i++) {
-        sum += data[i].std_t;
-    }
-    std_interval = sum/data.size();
+    std_interval = data[initial_size-1].std_t/initial_size;
     return std_interval;
 }
 
 int Regression::getSize() {
     return size;
+}
+
+int Regression::getInitialSize() {
+    return initial_size;
 }
 
 vector<SharePrice>& Regression::getMeanLine() {
@@ -169,6 +232,15 @@ vector<SharePrice>& Regression::getMeanLine() {
 
 vector<SharePrice>& Regression::getForecast() {
     return forecasted_line;
+}
+
+Date Regression::getNthDate(int n) {
+    return mean_line[n].t;
+}
+
+double Regression::getNthPrice(int n) {
+    // Returns the nth element of data
+    return data[n].price;
 }
 
 double Regression::getStandardDeviation() {
